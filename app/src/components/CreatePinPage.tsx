@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { v4 as uuidv4 } from 'uuid';
 interface Pin {
   name: string;
   content: string;
+  id: string;
 }
 
 const CreatePinPage: React.FC = () => {
@@ -14,17 +15,17 @@ const CreatePinPage: React.FC = () => {
     const handleCreatePin = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const newPin: Pin = {
+            id: uuidv4(),
             name: pinName,
             content: pinContent,
         };
 
-        // Store the new pin in Chrome's local storage
-        chrome.storage.local.set({ [newPin.name]: newPin }, () => {
-            console.log('Pin is saved!');
-            // Optionally, clear the input fields or handle further UI logic
+        chrome.storage.local.set({ [newPin.id]: newPin }, () => {
+           
+
             setPinName('');
             setPinContent('');
-            navigate('/'); // Navigate back to the home page
+            navigate('/'); 
         });
     };
 
