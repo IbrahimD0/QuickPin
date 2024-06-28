@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-// import debounce from "lodash/debounce";
 import { PinDiv } from "./Clipboard";
+import CreatePin from "./CreatePinPage";
+import { v4 as uuidv4 } from 'uuid'; 
 
 interface Pin {
   name: string;
@@ -10,15 +10,10 @@ interface Pin {
 }
 
 function HomePage() {
-  const navigate = useNavigate();
   const [pins, setPins] = useState<Pin[]>([]);
-  // const [searchTerm, setSearchTerm] = useState("");
-  // const [filteredPins, setFilteredPins] = useState<Pin[]>([]);
-  // const [showSuggestions, setShowSuggestions] = useState(false);
-  
- 
-  useEffect(() => {
+  const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
     chrome.storage.local.get(null, (items) => {
       const allPins = Object.values(items);
       if (allPins.length > 0) {
@@ -27,34 +22,28 @@ function HomePage() {
     });
   }, []);
 
-  const handleDelete = (id: string) => {
-
-    chrome.storage.local.remove([id], () => {
-      setPins((prevPins) => prevPins.filter((pin) => pin.id !== id));
-
+  const handleSaveNewPin = (name: string, content: string) => {
+    const newPin = { id: uuidv4(), name, content }; 
+    chrome.storage.local.set({ [newPin.id]: newPin }, () => {
+      setPins((prevPins) => [...prevPins, newPin]);
     });
   };
-  // useEffect(() => {
-  //   setFilteredPins(
-  //     pins.filter((pin) =>
-  //       pin.name.toLowerCase().includes(searchTerm.toLowerCase())
-  //     )
-  //   );
-  // }, [searchTerm, pins]);
+  const handleDelete = (id: string) => {
+    chrome.storage.local.remove([id], () => {
+      setPins((prevPins) => prevPins.filter((pin) => pin.id !== id));
+    });
+  };
 
-  // const debouncedSearch = debounce((term) => {
-  //   setSearchTerm(term);
-  // }, 200);
+  const handleUpdate = (id: string, newName: string, newContent: string) => {
+    const updatedPin = { id, name: newName, content: newContent };
+    chrome.storage.local.set({ [id]: updatedPin }, () => {
+      setPins((prevPins) =>
+        prevPins.map((pin) => (pin.id === id ? updatedPin : pin))
+      );
+    });
+  };
+  const filteredPins = pins.filter(pin => pin.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   debouncedSearch(event.target.value);
-  // };
-  // const handleSearchFocus = () => {
-  //   setShowSuggestions(true);
-  // };
-  // const handleSearchBlur = () => {
-  //   setShowSuggestions(false);
-  // };
 
   return (
     <div className="w-96 h-96 bg-background p-5 flex flex-col gap-4 justify-between border-primary-600 border-2 shadow-md shadow-primary-800 overflow-auto">
@@ -62,62 +51,42 @@ function HomePage() {
         <h1 className="text-2xl font-bold text-primary-600 text-center">
           Welcome to QuickPin
         </h1>
-
-        {/* <div className="max-w-md mx-auto relative">
+        
+        <div className="max-w-md mx-auto relative">
           <input
-            type="search"
-            className="block w-full p-4 ps-10 pe-16 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-my-primary focus:border-my-primary"
-            placeholder="Search for a pin..."
-            onChange={handleSearchChange}
-            onFocus={handleSearchFocus}
-            onBlur={handleSearchBlur}
-            required
+             type="text"
+             value={searchTerm}
+             onChange={(e) => setSearchTerm(e.target.value)}
+             placeholder="Search..."
           />
-          {showSuggestions ? (
-            <ul className="absolute w-full bg-white border border-gray-300 rounded-md mt-1 z-20">
-              {filteredPins.map((pin, index) => (
-                <li
-                  key={index}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  {pin.name}
-                </li>
-              ))}
-            </ul>
-          )
-            : null}
-        </div> */}
+        
+        </div>
       </div>
-
+      <div className="flex justify-center">
+        <CreatePin onSave={handleSaveNewPin} />
+      </div>
       <div>
         {pins.length > 0 ? (
           <ul>
-            {pins.map((pin, index) => (
+            {filteredPins.map((pin, index) => (
               <li key={index} className="py-2">
                 <PinDiv
                   id={pin.id}
                   name={pin.name}
                   valueToCopy={pin.content}
                   onDelete={() => handleDelete(pin.id)}
+                  onUpdate={handleUpdate}
                 />
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-center text-primary-500">
+          <h1 className="text-center text-primary-500 text-xl">
             You haven't created any pins yet.
-          </p>
+          </h1>
         )}
       </div>
-      <div className="flex justify-center">
-        <button
-          onClick={() => navigate("/create")}
-          className="text-lg bg-accent-500 hover:bg-accent-300 text-white font-bold py-2 px-4 m-4
-         rounded-lg shadow-secondary shadow-md hover:shadow-secondary-700 hover:shadow-lg"
-        >
-          Create Pin
-        </button>
-      </div>
+      
     </div>
   );
 }

@@ -1,75 +1,53 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-interface Pin {
-  name: string;
-  content: string;
-  id: string;
+import React, { useState } from "react";
+import { MdOutlineAdd } from "react-icons/md";
+
+interface CreatePinProps {
+  onSave: (name: string, content: string) => void;
 }
 
-const CreatePinPage: React.FC = () => {
-    const navigate = useNavigate();
-    const [pinName, setPinName] = useState<string>('');
-    const [pinContent, setPinContent] = useState<string>('');
+const CreatePin: React.FC<CreatePinProps> = ({ onSave }) => {
+  const [pinName, setPinName] = useState("");
+  const [pinContent, setPinContent] = useState("");
 
-    const handleCreatePin = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const newPin: Pin = {
-            id: uuidv4(),
-            name: pinName,
-            content: pinContent,
-        };
+  const handleSave = () => {
+    if (pinName && pinContent) {
+      onSave(pinName, pinContent);
+      setPinName("");
+      setPinContent("");
+    } else {
+      alert("Both name and content must be filled out!");
+    }
+  };
 
-        chrome.storage.local.set({ [newPin.id]: newPin }, () => {
-           
-
-            setPinName('');
-            setPinContent('');
-            navigate('/'); 
-        });
-    };
-
-    return (
-      <div className="w-80 h-96 bg-background rounded-lg p-5 flex flex-col justify-between border-primary-600 border-2 shadow-md shadow-primary-800">
-        <h1 className="text-2xl font-bold text-primary-600 text-center">
-          Create a new Pin
-        </h1>
-        <form className="flex flex-col space-y-2" onSubmit={handleCreatePin}>
-          <label htmlFor="name" className="text-sm font-semibold text-primary-500">
-            Pin Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            placeholder="Add your pin name here"
-            className="border border-primary-300 rounded-lg p-2"
-            value={pinName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPinName(e.target.value)}
-          />
-
-          <label htmlFor="content" className="text-sm font-semibold text-primary-500">
-            Pin Content
-          </label>
-          <input
-            id="content"
-            type="text"
-            placeholder="Add your pin content here"
-            className="border border-primary-300 rounded-lg p-2"
-            value={pinContent}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPinContent(e.target.value)}
-          />
-
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="text-md bg-accent-500 hover:bg-accent-300 text-white font-bold py-2 px-4 m-4 rounded-lg shadow-secondary shadow-md hover:shadow-secondary-700 hover:shadow-lg"
-            >
-              Create Pin
-            </button>
-          </div>
-        </form>
+  return (
+    <div className="grid grid-cols-12 gap-2 items-center">
+      <div className="col-span-2">
+        <input
+          type="text"
+          placeholder="Enter pin name"
+          className="block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-sm text-primary focus:border-blue-500 focus:ring-blue-500"
+          value={pinName}
+          onChange={(e) => setPinName(e.target.value)}
+        />
       </div>
-    );
+      <div className="col-span-8">
+        <input
+          type="text"
+          placeholder="Enter pin content"
+          className="block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-2 text-sm text-primary focus:border-blue-500 focus:ring-blue-500"
+          value={pinContent}
+          onChange={(e) => setPinContent(e.target.value)}
+        />
+      </div>
+      <div
+        className="col-span-2 flex justify-center items-center"
+        onClick={handleSave}
+        title="Save Pin"
+      >
+        <MdOutlineAdd  className="text-lg hover:cursor-pointer" />
+      </div>
+    </div>
+  );
 };
 
-export default CreatePinPage;
+export default CreatePin;
