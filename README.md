@@ -1,4 +1,5 @@
-# QuickPin        ![QuickPin Logo](app/public/logo48.png)
+![QuickPin Logo](app/public/logo128.png)
+# QuickPin 
 Save and Manage Links, Usernames, and IDs with Ease
 
 ## Table of Contents
