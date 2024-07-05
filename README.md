@@ -39,3 +39,5 @@ QuickPin is a Chrome extension developed to enhance productivity by allowing use
 - Go to `chrome://extensions/`
 - Enable "Developer mode"
 - Click "Load unpacked" and select the `build` folder within the project directory
+## Authors
+- [@ibrahimd0](https://github.com/ibrahimd0)
