@@ -1,3 +1,4 @@
+![QuickPin Logo](./logo.png)
 # QuickPin
 Save and Manage Links, Usernames, and IDs with Ease
 
