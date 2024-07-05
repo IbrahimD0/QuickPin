@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import {MdModeEdit, MdDelete, MdSave, MdCancel } from "react-icons/md";
-
+// import { MdEdit  } from "react-icons/md";
+import {FaTrash , FaCheck, FaTimes } from "react-icons/fa";
+import { FaPen } from "react-icons/fa6";
 import { Clipboard } from "flowbite-react";
+
 interface PinDivProps {
   id: string;
   name: string;
@@ -37,11 +39,15 @@ export const PinDiv: React.FC<PinDivProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-12 gap-2 w-full max-w-full">
+    <div className="p-2 grid grid-cols-12 gap-x-2  w-full max-w-full bg-accent-700 border border-accent-300 rounded-lg shadow-md shadow-accent-200 hover:shadow-accent-400 hover:shadow-xl">
       <div className="col-span-3 w-full">
         <input
           type="text"
-          className="block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-4 text-sm text-primary focus:border-blue-500 focus:ring-blue-500"
+          className={`${
+            editMode
+              ? "rounded-lg block w-full border-0 border-b-2 bg-accent-900 px-2.5 py-2 text-sm text-primary focus:border-0 focus:border-2 focus:border-base-500 focus:ring-1 focus:ring-accent focus:bg-white focus:text-gray-900"
+              : "block w-full rounded-lg border border-accent-300 bg-background-500 p-2 text-sm text-primary font-medium focus:border-blue-500 focus:ring-blue-500"
+          }`}
           value={editMode ? editedName : name}
           onChange={(e) => setEditedName(e.target.value)}
           disabled={!editMode}
@@ -55,12 +61,21 @@ export const PinDiv: React.FC<PinDivProps> = ({
           <input
             id={"pincontent-" + id}
             type="text"
-            className="grid-cols-2 block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-4 text-sm text-primary focus:border-blue-500 focus:ring-blue-500"
+            className={`${
+              editMode
+                ? "rounded-lg block w-full border-0 border-b-2 bg-accent-900 px-2.5 py-2 text-sm text-primary  focus:border-0 focus:border-2 focus:border-base-500 focus:ring-1 focus:ring-accent focus:bg-white focus:text-gray-900"
+                : "block w-full rounded-lg border border-accent-300 bg-background-500 p-2 text-sm text-primary font-medium focus:border-blue-500 focus:ring-blue-500"
+            }`}
             value={editMode ? editedContent : valueToCopy}
             onChange={(e) => setEditedContent(e.target.value)}
             disabled={!editMode}
           />
-          <Clipboard.WithIconText valueToCopy={valueToCopy} />
+          {!editMode && (
+            <Clipboard.WithIconText
+              valueToCopy={valueToCopy}
+              className="bg-background-600 border-2 border-accent-600 ps-2 opacity-0 hover:opacity-100"
+            />
+          )}
         </div>
       </div>
       {editMode ? (
@@ -70,14 +85,14 @@ export const PinDiv: React.FC<PinDivProps> = ({
             onClick={handleSave}
             title="Save changes"
           >
-            <MdSave className="hover:cursor-pointer" />
+            <FaCheck  className="hover:cursor-pointer" />
           </div>
           <div
             className="col-span-1 w-full flex justify-center items-center"
             onClick={handleCancel}
             title="Cancel changes"
           >
-            <MdCancel className="hover:cursor-pointer" />
+            <FaTimes className="hover:cursor-pointer" />
           </div>
         </>
       ) : (
@@ -87,14 +102,14 @@ export const PinDiv: React.FC<PinDivProps> = ({
             onClick={handleEdit}
             title="Edit Pin"
           >
-            <MdModeEdit className="hover:cursor-pointer" />
+            <FaPen   className="hover:cursor-pointer" />
           </div>
           <div
             className="col-span-1 w-full flex justify-center items-center"
             onClick={() => onDelete(id)}
             title="Delete Pin"
           >
-            <MdDelete className="hover:cursor-pointer" />
+            <FaTrash className="hover:cursor-pointer" />
           </div>
         </>
       )}
