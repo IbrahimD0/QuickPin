@@ -1,4 +1,4 @@
-![QuickPin Logo](..public/logo48.png)
+![QuickPin Logo](../public/logo48.png)
 # QuickPin
 Save and Manage Links, Usernames, and IDs with Ease
 
