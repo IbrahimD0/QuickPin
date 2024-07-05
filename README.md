@@ -29,7 +29,7 @@ QuickPin is a Chrome extension developed to enhance productivity by allowing use
   git clone https://github.com/yourusername/quickpin.git
 - Navigate to the project directory and install dependencies:
   ```bash
-  cd quickpin
+  cd app
   npm install
 ## Usage
 - Start the development server:
