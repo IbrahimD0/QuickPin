@@ -2,6 +2,12 @@
 # QuickPin 
 Save and Manage Links, Usernames, and IDs with Ease
 
+## Extension Walkthrough
+
+Here's a walkthrough of the extension:
+
+👉🏿<img src='QuickPinGif.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
 ## Table of Contents
 - [About](#about)
 - [Requirements](#requirements)
