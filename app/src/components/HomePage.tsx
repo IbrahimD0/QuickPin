@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { PinDiv } from "./Clipboard";
-import CreatePin from "./CreatePinPage";
+import { PinDiv } from "./PinDiv";
+import CreatePin from "./AddPinDiv";
 import { v4 as uuidv4 } from "uuid";
 
 interface Pin {
@@ -12,7 +12,7 @@ interface Pin {
 function HomePage() {
   const [pins, setPins] = useState<Pin[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  //Effect hook to load pins from chrome local storage. Using chrome local storage since it syncs across devices.
   useEffect(() => {
     chrome.storage.local.get(null, (items) => {
       const allPins = Object.values(items);
@@ -22,30 +22,35 @@ function HomePage() {
     });
   }, []);
 
+  //Function to save new pin to chrome local storage
   const handleSaveNewPin = (name: string, content: string) => {
-    const newPin = { id: uuidv4(), name, content };
-    chrome.storage.local.set({ [newPin.id]: newPin }, () => {
-      setPins((prevPins) => [...prevPins, newPin]);
+    const newPin = { id: uuidv4(), name, content }; //Create new pin object
+    chrome.storage.local.set({ [newPin.id]: newPin }, () => { //Save pin to chrome local storage
+      setPins((prevPins) => [...prevPins, newPin]); //Add new pin to the state
     });
   };
+  //Function to delete pin from chrome local storage
   const handleDelete = (id: string) => {
-    chrome.storage.local.remove([id], () => {
-      setPins((prevPins) => prevPins.filter((pin) => pin.id !== id));
+    chrome.storage.local.remove([id], () => { //Remove pin from chrome local storage
+      setPins((prevPins) => prevPins.filter((pin) => pin.id !== id)); //Remove pin from the state
     });
   };
-
+  //Function to update pin in chrome local storage
   const handleUpdate = (id: string, newName: string, newContent: string) => {
-    const updatedPin = { id, name: newName, content: newContent };
-    chrome.storage.local.set({ [id]: updatedPin }, () => {
+    const updatedPin = { id, name: newName, content: newContent };//Create updated pin object
+    chrome.storage.local.set({ [id]: updatedPin }, () => { //Update pin in chrome local storage
       setPins((prevPins) =>
-        prevPins.map((pin) => (pin.id === id ? updatedPin : pin))
+        prevPins.map((pin) => (pin.id === id ? updatedPin : pin)) //Update pin in the state
       );
     });
   };
+  //Filter pins based on search term for search functionality
   const filteredPins = pins.filter((pin) =>
     pin.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+
+  //Renders the home page with search bar, create pin form and list of pins
   return (
     <div className="w-80 h-96 p-5 bg-background border-primary-600 border-2 shadow-md shadow-primary-800 overflow-auto">
       <h1 className="mb-4 text-2xl font-bold text-primary-500 text-center">

@@ -4,14 +4,17 @@ import {FaTrash , FaCheck, FaTimes } from "react-icons/fa";
 import { FaPen } from "react-icons/fa6";
 import { Clipboard } from "flowbite-react";
 
+
+//Props for PinDiv component. Contains id, name, valueToCopy, onDelete and onUpdate functions
 interface PinDivProps {
   id: string;
   name: string;
   valueToCopy: string;
-  onDelete: (id: string) => void;
-  onUpdate: (id: string, name: string, content: string) => void;
+  onDelete: (id: string) => void; //Function to delete pin
+  onUpdate: (id: string, name: string, content: string) => void; //Function to update pin
 }
 
+//PinDiv component to display the pin as a div with edit, delete and copy functionality
 export const PinDiv: React.FC<PinDivProps> = ({
   id,
   name,
@@ -31,7 +34,7 @@ export const PinDiv: React.FC<PinDivProps> = ({
     onUpdate(id, editedName, editedContent);
     setEditMode(false);
   };
-
+  
   const handleCancel = () => {
     setEditedName(name);
     setEditedContent(valueToCopy);
