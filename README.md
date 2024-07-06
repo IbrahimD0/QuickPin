@@ -2,17 +2,14 @@
 # QuickPin 
 Save and Manage Links, Usernames, and IDs with Ease
 
-## Extension Walkthrough
 
-Here's a walkthrough of the extension:
-
-👉🏿<img src='QuickPinGif.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 ## Table of Contents
 - [About](#about)
 - [Requirements](#requirements)
   - [Production](#production)
   - [Development](#development)
+- [Extension Walkthrough](#walkthrough)
 - [Authors](#authors)
 
 ## About
@@ -46,5 +43,11 @@ QuickPin is a Chrome extension developed to enhance productivity by allowing use
 - Go to `chrome://extensions/`
 - Enable "Developer mode"
 - Click "Load unpacked" and select the `build` folder within the project directory
+
+## Walkthrough
+
+Here's a walkthrough of the extension:
+
+👉🏿<img src='QuickPinGif.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 ## Authors
 - [@ibrahimd0](https://github.com/ibrahimd0)
